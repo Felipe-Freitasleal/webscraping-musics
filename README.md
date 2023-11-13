@@ -1,2 +1,2 @@
 # webscraping-musics
-Web scraping some musics or album information from Wikipedia
+Web scraping some musics information from Wikipedia
