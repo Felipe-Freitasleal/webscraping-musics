@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raspagem de músicas</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        form {
+            margin-top: 20px;
+
+        }
+
+        button {
+            width: 10%;
+        }
+
+        #albumLink {
+            width: 30rem;
+        }
+
+        #databaseId {
+            width: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Adicione o link do álbum e o ID no banco de dados: </h1>
+        <form id="myForm">
+            <input id="albumLink" placeholder="Link do álbum"/>
+            <input id="databaseId" placeholder="ID"/>
+            <span>
+                <button type="button" onclick="submitForm()">Enviar</button>
+            </span>
+        </form>
+        <p id="successMessage" style="color: green;"></p>
+    </div>
+
+    <script>
+        async function submitForm() {
+            const albumLink = document.getElementById('albumLink').value;
+            const databaseId = document.getElementById('databaseId').value;
+
+            const data = {
+                link: albumLink,
+                id: databaseId
+            };
+
+            try {
+                const response = await fetch(`http://localhost:3030/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro na requisição');
+                }
+
+                const json = await response.json();
+                console.log(json)
+
+                // Limpar os campos do formulário
+                document.getElementById('albumLink').value = '';
+                document.getElementById('databaseId').value = '';
+
+                // Exibir mensagem de sucesso
+                document.getElementById('successMessage').textContent = json.message;
+            } catch (error) {
+                console.error(error.message);
+                // Exibir mensagem de erro, se necessário
+            }
+        }
+    </script>
+</body>
+</html>
