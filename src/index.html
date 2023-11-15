@@ -4,52 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raspagem de músicas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;500&display=swap" rel="stylesheet">
     <style>
         body {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
+            background-color: #2d4360;
+            font-family: 'Roboto', sans-serif;
         }
-
+        
         .container {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+            border: solid #D4D4D4 2px;
+            border-radius: 12px;
+            padding: 1rem;
+            width: 20%;
+            color: #D4D4D4;
         }
 
         form {
-            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            align-items: center;
+            margin-top: 16px;
+            height: 7rem;
+            width: 100%;
+        }
 
+        header {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            justify-content: center;
+        }
+
+        .head {
+            font-size: 24px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        } 
+
+        span {
+            text-align: left;
+            font-size: 14px;
+            font-weight: 300;
         }
 
         button {
-            width: 10%;
+            width: 100%;
+            grid-column: 1 / 2;
+            grid-row: 3 / 4;
+            height: 24px;
+            border-radius: 4px;
+            background-color: #F5F5F5;
+            color: black;
+            font-weight: 600;
+            margin-top: 8px;
+
+            &:hover {
+                background-color: #737373;
+                color: #262626;
+            }
         }
 
-        #albumLink {
-            width: 30rem;
+        input {
+            width: 98%;
+            height: 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #000000;
         }
 
-        #databaseId {
-            width: 3rem;
+        p {
+            color: #D4D4D4;
+            font-size: 16xp;
+            font-weight: 300;
         }
+
+
     </style>
 </head>
 <body>
+    <p id="loading"><span id="loadingIndicator" style="display: none;">Carregando...</span></p>
     <div class="container">
-        <h1>Adicione o link do álbum e o ID no banco de dados: </h1>
+        <header>
+            <span class="head">Web Scraping Musics</span>
+            <span>Insira o link do album e o id que deseja fazer a raspagem </span>
+        </header>
         <form id="myForm">
-            <input id="albumLink" placeholder="Link do álbum"/>
-            <input id="databaseId" placeholder="ID"/>
-            <span>
-                <button type="button" onclick="submitForm()">Enviar</button>
-            </span>
+            <input id="albumLink" placeholder="Link" autocomplete="off"/>
+            <input id="databaseId" placeholder="ID" autocomplete="off"/>
+            <button type="button" onclick="submitForm()">Buscar dados</button>
         </form>
         <p id="successMessage" style="color: green;"></p>
     </div>
 
     <script>
         async function submitForm() {
+            document.getElementById("loadingIndicator").style.display = "inline";
+
             const albumLink = document.getElementById('albumLink').value;
             const databaseId = document.getElementById('databaseId').value;
 
@@ -74,15 +138,15 @@
                 const json = await response.json();
                 console.log(json)
 
-                // Limpar os campos do formulário
+                document.getElementById('successMessage').textContent = json.message;
+
                 document.getElementById('albumLink').value = '';
                 document.getElementById('databaseId').value = '';
-
-                // Exibir mensagem de sucesso
-                document.getElementById('successMessage').textContent = json.message;
+                document.getElementById("loadingIndicator").style.display = "none";
             } catch (error) {
                 console.error(error.message);
-                // Exibir mensagem de erro, se necessário
+                document.getElementById('successMessage').textContent = error.message;
+                document.getElementById("loadingIndicator").style.display = "none";
             }
         }
     </script>
