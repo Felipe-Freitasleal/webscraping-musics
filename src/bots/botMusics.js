@@ -57,6 +57,7 @@ export async function getMusics(link, id) {
 
   await browser.close();
 
+  console.log(`Musicas upadas com sucesso no album com id ${id}`);
   return `Musicas upadas com sucesso no album com id ${id}`;
 }
 
